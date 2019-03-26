@@ -41,18 +41,21 @@ describe('Users model', () => { //arrow function!
     });
 
     it('should update the user', async () => {
-        //grab a user with id(2)
+        // grab a user with id 2
         const theUser = await User.getById(2);
-        //update the email
-        theUser.email = "new@new.com";
+        // update the email
+        theUser.email = 'new@new.com';
         // save the user
-        theUser.save()
-            .then(async (report) => {
-                // console.log(report);
-                //re-grab the user
-                const alsoTheUser = await User.getById(2);
-                // expect the email to be equal to the new value
-                expect(alsoTheUser.email).to.equal("new@new.com");
-            });
+        await theUser.save();
+        const alsoTheUser = await User.getById(2);
+        expect(alsoTheUser.email).to.equal('new@new.com');
+        // theUser.save()
+        //     .then(async (report) => {
+        //         // console.log(report);
+        //         // re-grab the user with id 2
+        //         const alsoTheUser = await User.getById(2);
+        //         // expect the email to be equal to the new value
+        //         expect(alsoTheUser.email).to.equal('new3asdfadf@new.com');
+        //     });
     });
 });

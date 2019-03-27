@@ -59,6 +59,33 @@ describe('Users model', () => { //arrow function!
         //         expect(alsoTheUser.email).to.equal('new3asdfadf@new.com');
         //     });
     });
+
+    it('should encrypt the password', async () => {
+        //get a user with id 1
+        const theUser = await User.getById(1);
+        //set their password field to "bacon"
+        theUser.setPassword("bacon");
+        //compare their password to "bacon"
+        expect(theUser.password).not.to.equal("bacon");
+        //it should be false
+    });
+
+    it('should be able to check for passwords', async () => {
+        //get a user with id 1
+        const theUser = await User.getById(1);
+        //set their password field to "bacon"
+        theUser.setPassword("bacon");
+        //save them to the database
+        await theUser.save();
+        //get them back out of the database
+        const sameUser = await User.getById(1);
+        //ask them if their password is "bacon"
+        const isCorrectPassword = sameUser.checkPassword("bacon");
+        expect(isCorrectPassword).to.be.true;
+
+        const isNotCorrectPassword = sameUser.checkPassword("tofu");
+        expect(isNotCorrectPassword).to.be.false;
+    });
 });
 
 describe('Reviews', () => {
@@ -86,7 +113,10 @@ describe('Users and Reviews', () => {
         //grab a user by id
         const theUser = await User.getById(3);
         //then get all their reviews
-        const theReviews = await theUser.getReviews();
+        // const theReviews = await theUser.getReviews();
+
+        const theReviews = await theUser.reviews;
+        
         //confirm that their reviews are in an array
         expect(theReviews).to.be.an.instanceOf(Array);
         //and that the array is the correct length
@@ -96,4 +126,4 @@ describe('Users and Reviews', () => {
             expect(theReviews[i]).to.be.an.instanceOf(Reviews)
         }
     })
-})
+});

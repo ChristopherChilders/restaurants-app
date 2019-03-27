@@ -2,6 +2,7 @@
 const db = require('./conn');
 const Review = require('./reviews');
 const bcrypt = require('bcryptjs');
+const Favorites = require('./favorites');
 
 //Need a User Class
 // classes should start w/ uppercase
@@ -85,12 +86,24 @@ class User {
                     return arrayOfReviewInstances;
                 })
     }
+
+    //getting the favorites
+    get favs(){
+        return db.any(`select * from favorites where user id=${this.id}`)
+                .then((arrayOfFavoritesData) => {
+                    const arrayOfFavoritesInstances = []
+                    arrayOfFavoritesData.forEach((data) => {
+                        const newInstance = new Favorites(
+                            data.id,
+                            data.user_id,
+                            data.restaurants_id
+                        )
+                    })
+                });
+    }
 };
 
-// User.getById(3)
-//     .then((user) => {
-//         console.log(user);
-//     });
+
 
 //Export my User model
 module.exports = User;

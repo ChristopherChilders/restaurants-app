@@ -127,3 +127,17 @@ describe('Users and Reviews', () => {
         }
     })
 });
+
+describe('User and Favorites', () => {
+    it('should get all favorites for a user', async () => {
+        //grab all the favorites of a user
+        const theUser = await User.getById(5);
+        const theFavorites = await theUser.favs;
+        //confirm that their favorites are in an array
+        expect(theFavorites).to.be.an.instanceOf(Array);
+        expect(theFavorites).to.have.lengthOf(5);
+        for (let i=0; i<theFavorites; i++){
+            expect(theFavorites[i]).to.be.an.instanceOf(Favorites)
+        }
+    })
+})

@@ -7,6 +7,7 @@ chai.use(chaiAsPromised).should();
 
 const User = require('../models/user');
 const Restaurant = require('../models/restaurants');
+const Reviews = require('../models/reviews');
 
 //add a describe block for restaurant tests
 describe('Restaurant model', () => {
@@ -59,3 +60,40 @@ describe('Users model', () => { //arrow function!
         //     });
     });
 });
+
+describe('Reviews', () => {
+    // can i get one review?
+    it('should be able to retrieve a review by id', async () => {
+        // hopes and dreams phase: what code do i wish existed?
+        const thatReview = await Reviews.getById(2);
+        expect(thatReview).to.be.an.instanceOf(Reviews);
+    });
+    // can i get all reviews?
+    it('should be able to retieve all reviews', async () => {
+        const aBunchOfReviews = await Reviews.getAll();
+        expect(aBunchOfReviews).to.be.an.instanceOf(Array);
+        //and make sure each of them is an array
+        //use a plain 'for' loop, do that the exception does not
+        //get swallowed by a .forEach callback
+        for(let i=0; i<aBunchOfReviews.length; i++){
+            expect(aBunchOfReviews[i]).to.be.an.instanceOf(Reviews);
+        }
+    });
+});
+
+describe('Users and Reviews', () => {
+    it('a user instance should be able to retieve all their reviews', async () => {
+        //grab a user by id
+        const theUser = await User.getById(3);
+        //then get all their reviews
+        const theReviews = await theUser.getReviews();
+        //confirm that their reviews are in an array
+        expect(theReviews).to.be.an.instanceOf(Array);
+        //and that the array is the correct length
+        expect(theReviews).to.have.lengthOf(1);
+        //and that each one is an instance of Reviews
+        for (let i=0; i<theReviews.length; i++){
+            expect(theReviews[i]).to.be.an.instanceOf(Reviews)
+        }
+    })
+})

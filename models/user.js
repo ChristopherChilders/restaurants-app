@@ -37,6 +37,17 @@ class User {
                     })
     }
 
+    static getAll(){
+        return db.any(`select * from users`)
+        .then((arrayOfUsers) => {
+            return arrayOfUsers.map((userData) => {
+                const aUser = new User(userData.id, userData.first_name, userData.last_name, 
+                    userData.email, userData.password)
+                return aUser
+            })
+        });
+    }
+
     //no static since this is an instance method
     //it belongs to the individual instance
     save(){
@@ -98,7 +109,9 @@ class User {
                             data.user_id,
                             data.restaurants_id
                         )
+                        arrayOfFavoritesData.push(newInstance);
                     })
+                    return arrayOfFavoritesInstances;
                 });
     }
 };

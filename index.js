@@ -20,29 +20,39 @@ const server = http.createServer(async (req, res) => {
         const allReviews = await Reviews.getAll();
         const reviewJSON = JSON.stringify(allReviews);
         res.end(reviewJSON);
+
+        
     } else if (req.url.startsWith("/users")){
         const parts = req.url.split("/")
         console.log(parts);
+        
+        
         //when the req.url is "/users", parts is ['', 'users']
         //when the req.url is "/users/3", parts is ['', 'users', '3']
-        if(parts.length === 2){
-            const allUsers = await Users.getAll();
-            const userJson = JSON.stringify(allUsers);
-            res.end(userJson);
-        } else if (parts.length === 3){
-            const userId = parts[2];
-            const theUser = await Users.getById(userId);
-            const userJson = JSON.stringify(theUser);
-            res.end(userJson)
-        } else {
-            res.statusCode = 404;
-            res.end('Resource not found.')
-        }
+        const method = req.method;
+        if (method === "GET"){
 
+            if(parts.length === 2){
+                const allUsers = await Users.getAll();
+                const userJson = JSON.stringify(allUsers);
+                res.end(userJson);
+            } else if (parts.length === 3){
+                const userId = parts[2];
+                const theUser = await Users.getById(userId);
+                const userJson = JSON.stringify(theUser);
+                res.end(userJson)
+            } else {
+                res.statusCode = 404;
+                res.end('Resource not found.')
+            }
+        }else if (method === "POST"){
+            res.end('{message: "no soup for you"}');
+        }
+            
     } else {
         res.end(`{message: "thank you for your patronage. please send bitcoin."}`);
     } 
-        
+    
 
 });
 
